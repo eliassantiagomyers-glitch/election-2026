@@ -161,10 +161,14 @@ html, body {
   fill: #ded5c2;
 }
 
+.district:focus {
+  outline: none; /* no blue ring on click/tap */
+}
+
 .district:focus-visible {
   outline: none;
   stroke: var(--ink);
-  stroke-width: 3;
+  stroke-width: 2.5px; /* keyboard users still get a visible focus cue */
 }
 
 .district-label {
