@@ -58,9 +58,16 @@
     svg.setAttribute("aria-label", CFG.layers[layerId].label + " districts map");
 
     var ds = GEO[layerId];
-    var labelSize = Math.min(b.w, b.h) * 0.055;
+    var labelSize = Math.min(b.w, b.h) * 0.04;
 
-    Object.keys(ds).forEach(function (id) {
+    // draw contested districts last so their red outline is never
+    // overpainted by a neighboring muted district's border
+    var drawOrder = Object.keys(ds).sort(function (a, b2) {
+      var ca = (CFG.races[layerId][a] || {}).contested ? 1 : 0;
+      var cb = (CFG.races[layerId][b2] || {}).contested ? 1 : 0;
+      return ca - cb;
+    });
+    drawOrder.forEach(function (id) {
       var race = CFG.races[layerId][id] || { title: id, contested: false, candidates: [] };
       var path = document.createElementNS(svgNS, "path");
       path.setAttribute("d", ringsToPath(ds[id].rings));

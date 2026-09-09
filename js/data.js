@@ -24,8 +24,8 @@ window.DASHBOARD_CONFIG = {
   live_election: false,
   last_updated: "Nov. 3, 2026, 8:00 p.m.",
 
-  title: "Chico election map 2026 - ChicoSol",
-  subtitle: "Hover or click on a district to see the race. Read more will redirect to the most relevant coverage.",
+  title: "Chico's 2026 city council & school board elections.",
+  subtitle: "Hover or click on a district to see more info about the race. Read more button will link to relevant/recent coverage. School Board map needs more work, will be fixed soon. Elias S. Myers/ChicoSol. Last Updated: 12:16 AM Wed., Sept. 9., 2026.",
 
   layers: {
     council: { label: "City Council",  source: "City of Chico council district map, 2024" },
