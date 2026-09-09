@@ -73,6 +73,47 @@
       svg.appendChild(path);
     });
 
+    // reference roads: non-interactive orientation layer
+    if (window.MAP_ROADS) {
+      var roadFont = Math.min(b.w, b.h) * 0.026;
+      var roadsG = document.createElementNS(svgNS, "g");
+      roadsG.setAttribute("class", "roads");
+      window.MAP_ROADS.forEach(function (rd) {
+        if (rd.layers.indexOf(layerId) === -1) return;
+        var rp = document.createElementNS(svgNS, "path");
+        rp.setAttribute("d", rd.paths.map(function (seg) {
+          return "M" + seg.map(function (pt) {
+            var q = project(pt);
+            return q[0].toFixed(3) + " " + q[1].toFixed(3);
+          }).join("L");
+        }).join(""));
+        rp.setAttribute("class", "road road-" + rd.kind);
+        rp.setAttribute("vector-effect", "non-scaling-stroke");
+        roadsG.appendChild(rp);
+      });
+      svg.appendChild(roadsG);
+      var roadLabels = document.createElementNS(svgNS, "g");
+      roadLabels.setAttribute("class", "road-labels");
+      window.MAP_ROADS.forEach(function (rd) {
+        if (rd.layers.indexOf(layerId) === -1) return;
+        rd.labels.forEach(function (lb) {
+          var a = project([lb.x, lb.y]);
+          var t = document.createElementNS(svgNS, "text");
+          t.setAttribute("x", a[0]);
+          t.setAttribute("y", a[1]);
+          t.setAttribute("text-anchor", "middle");
+          t.setAttribute("dominant-baseline", "central");
+          t.setAttribute("font-size", roadFont * (rd.kind === "hwy" ? 1.25 : 1));
+          t.setAttribute("stroke-width", roadFont * 0.3);
+          t.setAttribute("transform", "rotate(" + lb.angle + " " + a[0] + " " + a[1] + ")");
+          t.setAttribute("class", "road-label road-label-" + rd.kind);
+          t.textContent = lb.text;
+          roadLabels.appendChild(t);
+        });
+      });
+      svg.appendChild(roadLabels);
+    }
+
     // labels last so they sit above fills
     Object.keys(ds).forEach(function (id) {
       var race = CFG.races[layerId][id] || { contested: false };

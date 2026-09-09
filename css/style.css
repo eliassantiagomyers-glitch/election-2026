@@ -375,3 +375,41 @@ html, body {
 @media (prefers-reduced-motion: reduce) {
   .district, .race-card { transition: none; }
 }
+
+/* ---------- reference roads ---------- */
+.roads path {
+  fill: none;
+  pointer-events: none;
+}
+
+.road-street {
+  stroke: #ffffff;
+  stroke-width: 1.4px;
+  opacity: 0.9;
+}
+
+.road-hwy {
+  stroke: #ffffff;
+  stroke-width: 2.6px;
+  opacity: 0.95;
+}
+
+.road-labels {
+  pointer-events: none;
+}
+
+.road-label {
+  font-family: var(--font-body);
+  font-style: italic;
+  fill: #7d7264;
+  paint-order: stroke;
+  stroke: rgba(255, 255, 255, 0.9);
+  stroke-linejoin: round;
+}
+
+.road-label-hwy {
+  font-family: var(--font-head);
+  font-style: normal;
+  font-weight: 600;
+  fill: #5a5044;
+}
