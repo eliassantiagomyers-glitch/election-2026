@@ -24,8 +24,8 @@ window.DASHBOARD_CONFIG = {
   live_election: false,
   last_updated: "Nov. 3, 2026, 8:00 p.m.",
 
-  title: "Chico's 2026 local elections",
-  subtitle: "Hover or tap a highlighted district to see the race.",
+  title: "Chico election map 2026 - ChicoSol",
+  subtitle: "Hover or click on a district to see the race. Read more will redirect to the most relevant coverage.",
 
   layers: {
     council: { label: "City Council",  source: "City of Chico council district map, 2024" },
