@@ -65,6 +65,7 @@
       var path = document.createElementNS(svgNS, "path");
       path.setAttribute("d", ringsToPath(ds[id].rings));
       path.setAttribute("class", "district " + (race.contested ? "contested" : "no-race"));
+      path.setAttribute("vector-effect", "non-scaling-stroke");
       path.setAttribute("data-id", id);
       path.setAttribute("tabindex", "0");
       path.setAttribute("role", "button");

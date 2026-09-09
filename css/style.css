@@ -135,23 +135,23 @@ html, body {
 .district {
   fill: var(--muted-fill);
   stroke: var(--muted-line);
-  stroke-width: 1.1;
+  stroke-width: 1px;
   stroke-linejoin: round;
-  transition: fill 120ms ease, stroke-width 120ms ease;
+  transition: fill-opacity 120ms ease, stroke-width 120ms ease;
 }
 
 .district.contested {
   fill: var(--primary);
-  fill-opacity: 0.30;
+  fill-opacity: 0.16;
   stroke: var(--primary);
-  stroke-width: 1.8;
+  stroke-width: 1.5px;
   cursor: pointer;
 }
 
 .district.contested:hover,
 .district.contested.is-active {
-  fill-opacity: 0.55;
-  stroke-width: 3;
+  fill-opacity: 0.32;
+  stroke-width: 2.5px;
 }
 
 .district.no-race { cursor: default; }
