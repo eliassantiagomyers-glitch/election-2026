@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chico 2026 local elections — ChicoSol</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="dash">
+
+  <header class="dash-head">
+    <div class="dash-title">
+      <h1 id="dash-title">Chico's 2026 local elections</h1>
+      <p id="dash-subtitle">Hover or tap a highlighted district to see the race.</p>
+    </div>
+    <div class="layer-toggle" role="group" aria-label="Choose which races to show">
+      <button type="button" data-layer="council" aria-pressed="true">City Council</button>
+      <button type="button" data-layer="school" aria-pressed="false">School Board</button>
+    </div>
+  </header>
+
+  <div class="legend">
+    <span><span class="key key-contested"></span>Contested race</span>
+    <span><span class="key key-none"></span>No race in 2026</span>
+  </div>
+
+  <div class="map-wrap" id="map">
+    <div class="race-card" id="card" role="dialog" aria-live="polite"></div>
+  </div>
+
+  <footer class="dash-foot">
+    <span class="last-updated" id="last-updated"></span>
+    <span id="source-line"></span>
+  </footer>
+
+</div>
+
+<script src="js/districts.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

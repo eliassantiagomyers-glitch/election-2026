@@ -1,0 +1,373 @@
+/* ChicoSol elections dashboard */
+
+:root {
+  --primary: #a0312a;
+  --primary-deep: #7c241f;
+  --primary-tint: #e8cfc9;
+  --secondary: #f8b135;
+  --secondary-tint: #fbe3b3;
+  --ink: #26211d;
+  --ink-soft: #6b6258;
+  --paper: #ffffff;
+  --field: #f3eee4;      /* map background wash */
+  --muted-fill: #e7e0d2; /* districts with no race */
+  --muted-line: #c3b8a4;
+  --card-line: #ddd4c4;
+  --bar-c1: #a0312a;
+  --bar-c2: #f8b135;
+  --bar-c3: #4e6e58;
+  --bar-c4: #58657d;
+  --font-head: "Oswald", "Arial Narrow", sans-serif;
+  --font-body: "Source Serif 4", Georgia, serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.dash {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 20px 16px 28px;
+}
+
+/* ---------- header ---------- */
+.dash-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px 20px;
+  border-bottom: 3px solid var(--primary);
+  padding-bottom: 12px;
+}
+
+.dash-title h1 {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 1.7rem;
+  line-height: 1.15;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.dash-title p {
+  margin: 4px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+/* segmented layer toggle */
+.layer-toggle {
+  display: inline-flex;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.layer-toggle button {
+  font-family: var(--font-head);
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  padding: 8px 18px;
+  border: 0;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.layer-toggle button[aria-pressed="true"] {
+  background: var(--secondary);
+  color: var(--ink);
+}
+
+.layer-toggle button:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: -3px;
+}
+
+/* legend */
+.legend {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  margin: 10px 0 2px;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+
+.legend .key {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  margin-right: 6px;
+  vertical-align: -2px;
+}
+
+.key-contested { background: var(--primary); opacity: 0.85; }
+.key-none { background: var(--muted-fill); border: 1.5px solid var(--muted-line); }
+
+/* ---------- map ---------- */
+.map-wrap {
+  position: relative;
+  background: var(--field);
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.map-wrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.district {
+  fill: var(--muted-fill);
+  stroke: var(--muted-line);
+  stroke-width: 1.1;
+  stroke-linejoin: round;
+  transition: fill 120ms ease, stroke-width 120ms ease;
+}
+
+.district.contested {
+  fill: var(--primary);
+  fill-opacity: 0.30;
+  stroke: var(--primary);
+  stroke-width: 1.8;
+  cursor: pointer;
+}
+
+.district.contested:hover,
+.district.contested.is-active {
+  fill-opacity: 0.55;
+  stroke-width: 3;
+}
+
+.district.no-race { cursor: default; }
+
+.district.no-race:hover,
+.district.no-race.is-active {
+  fill: #ded5c2;
+}
+
+.district:focus-visible {
+  outline: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+.district-label {
+  font-family: var(--font-head);
+  font-weight: 600;
+  fill: var(--ink);
+  fill-opacity: 0.75;
+  pointer-events: none;
+}
+
+.district-label.on-contested { fill: var(--primary-deep); fill-opacity: 0.95; }
+
+/* ---------- race card ---------- */
+.race-card {
+  position: absolute;
+  z-index: 20;
+  width: 320px;
+  max-width: calc(100% - 20px);
+  background: var(--paper);
+  border: 1.5px solid var(--card-line);
+  border-top: 5px solid var(--primary);
+  border-radius: 8px;
+  box-shadow: 0 8px 22px rgba(38, 33, 29, 0.18);
+  padding: 14px 16px 12px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 120ms ease;
+}
+
+.race-card.show { opacity: 1; visibility: visible; }
+
+.race-card h2 {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin: 0 0 2px;
+  letter-spacing: 0.02em;
+}
+
+.race-card .race-kind {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  margin: 0 0 10px;
+}
+
+.cand-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+}
+
+.cand-photo {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--card-line);
+  flex: 0 0 auto;
+}
+
+.cand-who { flex: 1 1 auto; min-width: 0; }
+
+.cand-name {
+  font-family: var(--font-head);
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.cand-role {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.cand-votes {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 1.05rem;
+  text-align: right;
+  flex: 0 0 auto;
+}
+
+.cand-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-left: 6px;
+  vertical-align: 1px;
+}
+
+/* the 100% results bar between candidates */
+.vote-bar {
+  display: flex;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  background: var(--field);
+  margin: 6px 0;
+}
+
+.vote-bar span { display: block; height: 100%; }
+
+.vote-pcts {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  margin: -2px 0 4px;
+}
+
+.card-note {
+  font-style: italic;
+  color: var(--ink-soft);
+  margin: 4px 0 6px;
+  font-size: 0.92rem;
+}
+
+.card-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-top: 1px solid var(--card-line);
+  margin-top: 8px;
+  padding-top: 8px;
+  font-size: 0.88rem;
+}
+
+.card-foot a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.card-close {
+  display: none;
+  border: 0;
+  background: none;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--ink-soft);
+  cursor: pointer;
+  padding: 4px;
+  position: absolute;
+  top: 6px;
+  right: 8px;
+}
+
+/* ---------- footer ---------- */
+.dash-foot {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  justify-content: space-between;
+}
+
+.last-updated {
+  font-family: var(--font-head);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.last-updated::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--secondary);
+  margin-right: 7px;
+  vertical-align: 0;
+}
+
+/* ---------- mobile: card becomes a bottom sheet ---------- */
+@media (max-width: 640px) {
+  .dash { padding: 14px 10px 20px; }
+  .dash-title h1 { font-size: 1.35rem; }
+
+  .race-card {
+    position: fixed;
+    left: 0 !important;
+    right: 0;
+    bottom: 0;
+    top: auto !important;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 14px 14px 0 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    box-shadow: 0 -8px 26px rgba(38, 33, 29, 0.28);
+    padding-bottom: max(14px, env(safe-area-inset-bottom));
+  }
+
+  .card-close { display: block; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .district, .race-card { transition: none; }
+}
