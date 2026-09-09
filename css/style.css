@@ -396,6 +396,7 @@ html, body {
 
 .road-labels {
   pointer-events: none;
+  display: none; /* delete this line to bring road names back */
 }
 
 .road-label {
