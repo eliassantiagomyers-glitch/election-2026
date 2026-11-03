@@ -34,7 +34,7 @@ Three steps, repeated as often as the county posts new numbers:
 window.DASHBOARD_CONFIG = {
 
   live_election: false,
-  last_updated: "Nov. 3, 2026, 8:00 p.m.",
+  last_updated: "Nov. 3, 2026, 2:47 p.m.",
 
   title: "Chico's 2026 city council & school board elections.",
   subtitle: "Hover or click on a district to see more info about the race. Read more button will link to relevant/recent coverage. School Board map needs more work, will be fixed soon. Elias S. Myers/ChicoSol. Last Updated: 1:00 PM Wed., Sept. 9., 2026.",
