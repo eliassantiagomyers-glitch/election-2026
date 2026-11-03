@@ -1,5 +1,4 @@
 /* ChicoSol elections dashboard */
-
 :root {
   --primary: #a0312a;
   --primary-deep: #7c241f;
@@ -9,10 +8,10 @@
   --ink: #26211d;
   --ink-soft: #6b6258;
   --paper: #ffffff;
-  --field: #f3eee4;      /* map background wash */
-  --muted-fill: #e7e0d2; /* districts with no race */
+  --field: #f3eee4;          /* map background wash */
+  --muted-fill: #e7e0d2;     /* districts with no race */
   --muted-line: #c3b8a4;
-  --card-line: #ddd4c4;
+  --card-line: #d9d9d9;
   --bar-c1: #a0312a;
   --bar-c2: #f8b135;
   --bar-c3: #4e6e58;
@@ -26,7 +25,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: var(--paper);
+  background: transparent;
   color: var(--ink);
   font-family: var(--font-body);
   font-size: 16px;
@@ -121,7 +120,7 @@ html, body {
 /* ---------- map ---------- */
 .map-wrap {
   position: relative;
-  background: var(--field);
+  background: transparent;
   border-radius: 10px;
   margin-top: 10px;
 }
@@ -185,13 +184,12 @@ html, body {
 .race-card {
   position: absolute;
   z-index: 20;
-  width: 320px;
+  width: 300px;
   max-width: calc(100% - 20px);
   background: var(--paper);
-  border: 1.5px solid var(--card-line);
-  border-top: 5px solid var(--primary);
-  border-radius: 8px;
-  box-shadow: 0 8px 22px rgba(38, 33, 29, 0.18);
+  border: 1px solid var(--card-line);
+  border-radius: 4px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
   padding: 14px 16px 12px;
   opacity: 0;
   visibility: hidden;
@@ -203,14 +201,16 @@ html, body {
 .race-card h2 {
   font-family: var(--font-head);
   font-weight: 600;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   margin: 0 0 2px;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
 }
 
 .race-card .race-kind {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   margin: 0 0 10px;
 }
 
@@ -218,29 +218,23 @@ html, body {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 5px 0;
+  padding: 6px 0;
+  border-top: 1px solid #efefef;
 }
 
-.cand-photo {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--card-line);
-  flex: 0 0 auto;
-}
+.cand-row:first-of-type { border-top: 0; }
 
 .cand-who { flex: 1 1 auto; min-width: 0; }
 
 .cand-name {
-  font-family: var(--font-head);
-  font-weight: 500;
+  font-family: var(--font-body);
+  font-weight: 600;
   font-size: 1rem;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .cand-role {
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: var(--ink-soft);
 }
 
@@ -264,10 +258,10 @@ html, body {
 /* the 100% results bar between candidates */
 .vote-bar {
   display: flex;
-  height: 10px;
-  border-radius: 5px;
+  height: 8px;
+  border-radius: 4px;
   overflow: hidden;
-  background: var(--field);
+  background: #efefef;
   margin: 6px 0;
 }
 
@@ -294,7 +288,7 @@ html, body {
   justify-content: space-between;
   align-items: baseline;
   border-top: 1px solid var(--card-line);
-  margin-top: 8px;
+  margin-top: 10px;
   padding-top: 8px;
   font-size: 0.88rem;
 }
@@ -305,6 +299,8 @@ html, body {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+
+.card-foot a:hover { color: var(--primary-deep); }
 
 .card-close {
   display: none;
@@ -361,11 +357,11 @@ html, body {
     top: auto !important;
     width: 100%;
     max-width: 100%;
-    border-radius: 14px 14px 0 0;
+    border-radius: 12px 12px 0 0;
     border-left: 0;
     border-right: 0;
     border-bottom: 0;
-    box-shadow: 0 -8px 26px rgba(38, 33, 29, 0.28);
+    box-shadow: 0 -6px 22px rgba(0, 0, 0, 0.2);
     padding-bottom: max(14px, env(safe-area-inset-bottom));
   }
 
