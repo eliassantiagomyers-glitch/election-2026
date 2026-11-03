@@ -155,7 +155,6 @@
 
     if (!race.candidates.length) {
       h += "<p class='race-note'>Candidates to be announced.</p>";
-      h += footHTML(race);
       return h;
     }
 
@@ -186,13 +185,7 @@
       }
     }
 
-    h += footHTML(race);
     return h;
-  }
-
-  function footHTML(race) {
-    if (!race.read_more || race.read_more === "#") return "";
-    return "<div class='race-foot'><a href='" + race.read_more + "' target='_top'>Read more</a></div>";
   }
 
   function buildList(layerId) {
