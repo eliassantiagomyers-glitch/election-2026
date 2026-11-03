@@ -19,9 +19,21 @@
    read_more     : the coverage link for that race. "#" until you have one.
    ============================================================= */
 
+/*How to update the site
+
+# How to push to github:
+# normal push: git add . && git commit -m "message" && git push origin main
+# if github is ahead of local, run this: git pull --rebase origin main
+
+Three steps, repeated as often as the county posts new numbers:
+
+1. In `js/data.js`, set `live_election: true` (once, when polls close).
+2. Enter the raw counts into each candidate's `votes`, and set `last_updated` to the time you want readers to see (it's a plain string — write it exactly as it should appear).
+3. Commit and push. GitHub Pages redeploys automatically, usually in under a minute.*/
+
 window.DASHBOARD_CONFIG = {
 
-  live_election: false,
+  live_election: true,
   last_updated: "Nov. 3, 2026, 8:00 p.m.",
 
   title: "Chico's 2026 city council & school board elections.",
@@ -40,24 +52,24 @@ window.DASHBOARD_CONFIG = {
 
       d2: { title: "District 2", contested: true, read_more: "#",
         candidates: [
-          { name: "Kasey Reynolds", role: "Incumbent",  image: "images/candidate.png", votes: 0 },
-          { name: "Shelby Hebert",  role: "Challenger", image: "images/candidate.png", votes: 0 }
+          { name: "Kasey Reynolds", role: "Incumbent",  image: "images/candidate.png", votes: 83 },
+          { name: "Shelby Hebert",  role: "Challenger", image: "images/candidate.png", votes: 43 }
         ]},
 
       d3: { title: "District 3", contested: false, read_more: "#", candidates: [] },
 
       d4: { title: "District 4", contested: true, read_more: "#",
         candidates: [
-          { name: "Addison Winslow", role: "Incumbent",  image: "images/candidate.png", votes: 0 },
-          { name: "Tracy Vincent",   role: "Challenger", image: "images/candidate.png", votes: 0 }
+          { name: "Addison Winslow", role: "Incumbent",  image: "images/candidate.png", votes: 102 },
+          { name: "Tracy Vincent",   role: "Challenger", image: "images/candidate.png", votes: 20 }
         ]},
 
       d5: { title: "District 5", contested: false, read_more: "#", candidates: [] },
 
       d6: { title: "District 6", contested: true, read_more: "#",
         candidates: [
-          { name: "Tom van Overbeek",   role: "Incumbent",  image: "images/candidate.png", votes: 0 },
-          { name: "Megan Thomas Petty", role: "Challenger", image: "images/candidate.png", votes: 0 }
+          { name: "Tom van Overbeek",   role: "Incumbent",  image: "images/candidate.png", votes: 96 },
+          { name: "Megan Thomas Petty", role: "Challenger", image: "images/candidate.png", votes: 38 }
         ]},
 
       d7: { title: "District 7", contested: false, read_more: "#", candidates: [] }

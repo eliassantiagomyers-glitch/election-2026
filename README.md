@@ -33,6 +33,12 @@ Districts with `contested: false` are drawn muted; tapping one just says there's
 
 ## Election night
 
+# How to update the site
+
+# How to push to github:
+# normal push: git add . && git commit -m "message" && git push origin main
+# if github is ahead of local, run this: git pull --rebase origin main
+
 Three steps, repeated as often as the county posts new numbers:
 
 1. In `js/data.js`, set `live_election: true` (once, when polls close).
