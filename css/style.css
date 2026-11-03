@@ -35,7 +35,7 @@ html, body {
 .dash {
   max-width: 860px;
   margin: 0 auto;
-  padding: 20px 16px 28px;
+  padding: 0;
 }
 
 /* ---------- header ---------- */
@@ -122,7 +122,8 @@ html, body {
   position: relative;
   background: transparent;
   border-radius: 10px;
-  margin-top: 10px;
+  margin: 0;
+  overflow: hidden; /* the card lives inside this box and never adds height */
 }
 
 .map-wrap svg {
@@ -344,25 +345,18 @@ html, body {
   vertical-align: 0;
 }
 
-/* ---------- mobile: card becomes a bottom sheet ---------- */
+/* ---------- narrow widths: card floats centered over the map ---------- */
 @media (max-width: 640px) {
-  .dash { padding: 14px 10px 20px; }
-  .dash-title h1 { font-size: 1.35rem; }
-
   .race-card {
-    position: fixed;
-    left: 0 !important;
-    right: 0;
-    bottom: 0;
-    top: auto !important;
-    width: 100%;
-    max-width: 100%;
-    border-radius: 12px 12px 0 0;
-    border-left: 0;
-    border-right: 0;
-    border-bottom: 0;
-    box-shadow: 0 -6px 22px rgba(0, 0, 0, 0.2);
-    padding-bottom: max(14px, env(safe-area-inset-bottom));
+    position: absolute;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 24px);
+    max-width: 360px;
+    max-height: calc(100% - 24px);
+    overflow-y: auto;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.2);
   }
 
   .card-close { display: block; }
