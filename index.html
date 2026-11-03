@@ -12,8 +12,7 @@
 <script>
 (function () {
   function send() {
-    var h = document.documentElement.scrollHeight;
-    parent.postMessage({ type: 'election-height', height: h }, '*');
+    parent.postMessage({ type: 'election-height', height: document.documentElement.scrollHeight }, '*');
   }
   send();
   window.addEventListener('load', send);
