@@ -9,6 +9,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
+<script>
+(function () {
+  function send() {
+    var h = document.documentElement.scrollHeight;
+    parent.postMessage({ type: 'election-height', height: h }, '*');
+  }
+  send();
+  window.addEventListener('load', send);
+  window.addEventListener('resize', send);
+  new MutationObserver(send).observe(document.body, { childList: true, subtree: true, attributes: true });
+})();
+</script>
 <body>
 
 <div class="dash">
