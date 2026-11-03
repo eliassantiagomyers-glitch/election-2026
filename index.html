@@ -3,33 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chico 2026 city council elections map — ChicoSol</title>
+<title>Chico 2026 city council elections — ChicoSol</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=5">
+<link rel="stylesheet" href="css/style.css?v=6">
 </head>
 <body>
 <div class="dash">
 
-  <!-- app.js writes CFG.title / CFG.subtitle into these and will crash if
-       they're missing, so they stay in the DOM but never render -->
-  <h1 id="dash-title" hidden></h1>
-  <p id="dash-subtitle" hidden></p>
+  <div class="map-wrap" id="map"></div>
 
-  <div class="map-wrap" id="map">
-    <div class="race-card" id="card" role="dialog" aria-live="polite"></div>
-  </div>
-
-  <!-- app.js removes this itself unless live_election is on -->
-  <span class="last-updated" id="last-updated" hidden></span>
+  <div class="race-list" id="race-list"></div>
 
 </div>
 
 <script>
 (function () {
-  // measure the content box, not the document: documentElement.scrollHeight
-  // is never smaller than the iframe itself, so the frame could grow but never shrink
+  // measure the content box, not the document, so the iframe can shrink as well as grow
   function send() {
     var dash = document.querySelector('.dash');
     var h = Math.ceil(dash ? dash.getBoundingClientRect().height : document.body.offsetHeight);
@@ -42,9 +33,9 @@
 })();
 </script>
 
-<script src="js/districts.js?v=5"></script>
-<script src="js/roads.js?v=5"></script>
-<script src="js/data.js?v=5"></script>
-<script src="js/app.js?v=5"></script>
+<script src="js/districts.js?v=6"></script>
+<script src="js/roads.js?v=6"></script>
+<script src="js/data.js?v=6"></script>
+<script src="js/app.js?v=6"></script>
 </body>
 </html>
