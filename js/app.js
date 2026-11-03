@@ -234,7 +234,7 @@
   }
 
   function positionCard(evt) {
-    if (window.matchMedia("(max-width: 640px)").matches) return; // CSS bottom sheet
+    if (window.matchMedia("(max-width: 640px)").matches) return; // CSS centers it
     var wrapRect = mapWrap.getBoundingClientRect();
     var x = 16, y = 16;
     if (evt && typeof evt.clientX === "number") {
@@ -317,33 +317,4 @@
     postHeight();
   }
 
-  /* ---------- iframe auto-height ---------- */
-  function postHeight() {
-    window.requestAnimationFrame(function () {
-      var h = document.documentElement.scrollHeight;
-      if (window.parent !== window) {
-        window.parent.postMessage({ type: "chicosol-embed-height", height: h }, "*");
-      }
-    });
-  }
-
-  /* ---------- init ---------- */
-  document.getElementById("dash-title").textContent = CFG.title;
-  document.getElementById("dash-subtitle").textContent = CFG.subtitle;
-
-  var lu = document.getElementById("last-updated");
-  if (CFG.live_election && CFG.last_updated) {
-    lu.textContent = "Results last updated " + CFG.last_updated;
-  } else {
-    lu.remove();
-  }
-
-  document.querySelectorAll(".layer-toggle button").forEach(function (b) {
-    b.addEventListener("click", function () { setLayer(b.getAttribute("data-layer")); });
-  });
-
-  wireEvents();
-  setLayer("council");
-  window.addEventListener("resize", postHeight);
-  window.addEventListener("load", postHeight);
-})();
+  /* ---------- iframe
