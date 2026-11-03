@@ -1,20 +1,18 @@
 /* ChicoSol elections dashboard — app logic.
    Reads window.DASHBOARD_CONFIG (js/data.js) and
-   window.DISTRICT_GEOMETRY (js/districts.js). No libraries. */
+   window.DISTRICT_GEOMETRY (js/districts.js). No libraries.
+   Draws the council map and lists every contested race beneath it. */
 (function () {
   "use strict";
 
   var CFG = window.DASHBOARD_CONFIG;
   var GEO = window.DISTRICT_GEOMETRY;
+  var LAYER = "council";
   var BAR_COLORS = ["#a0312a", "#f8b135", "#4e6e58", "#58657d"];
 
   var mapWrap = document.getElementById("map");
+  var listEl = document.getElementById("race-list");
   var svgNS = "http://www.w3.org/2000/svg";
-  var card = document.getElementById("card");
-  var activeLayer = "council";
-  var pinnedId = null; // district id when card opened by tap/keyboard
-
-  var REFERENCE_LAYER = "council"; // every layer's viewer matches this layer's shape
 
   /* ---------- projection: lon/lat -> local km, y flipped ---------- */
   var KLON = 111.32 * Math.cos((39.75 * Math.PI) / 180);
@@ -23,7 +21,7 @@
     return [pt[0] * KLON, -pt[1] * KLAT];
   }
 
-  function rawBounds(layerId) {
+  function layerBounds(layerId) {
     var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
     var ds = GEO[layerId];
     Object.keys(ds).forEach(function (id) {
@@ -37,32 +35,8 @@
         });
       });
     });
-    return {
-      w: maxX - minX,
-      h: maxY - minY,
-      cx: (minX + maxX) / 2,
-      cy: (minY + maxY) / 2
-    };
-  }
-
-  function layerBounds(layerId) {
-    var raw = rawBounds(layerId);
-    var ref = layerId === REFERENCE_LAYER ? raw : rawBounds(REFERENCE_LAYER);
-    var aspect = ref.w / ref.h;
-
-    // grow whichever side is short so this layer's box has the reference shape;
-    // the geometry stays centered and simply draws smaller inside it
-    var w = raw.w, h = raw.h;
-    if (w / h < aspect) w = h * aspect;
-    else h = w / aspect;
-
-    var padX = w * 0.04, padY = h * 0.04;
-    return {
-      x: raw.cx - w / 2 - padX,
-      y: raw.cy - h / 2 - padY,
-      w: w + 2 * padX,
-      h: h + 2 * padY
-    };
+    var padX = (maxX - minX) * 0.04, padY = (maxY - minY) * 0.04;
+    return { x: minX - padX, y: minY - padY, w: (maxX - minX) + 2 * padX, h: (maxY - minY) + 2 * padY };
   }
 
   function ringsToPath(rings) {
@@ -74,8 +48,8 @@
     }).join("");
   }
 
-  /* ---------- build one SVG layer ---------- */
-  function buildLayer(layerId) {
+  /* ---------- build the SVG map ---------- */
+  function buildMap(layerId) {
     var b = layerBounds(layerId);
     var svg = document.createElementNS(svgNS, "svg");
     svg.setAttribute("viewBox", b.x + " " + b.y + " " + b.w + " " + b.h);
@@ -100,9 +74,13 @@
       path.setAttribute("class", "district " + (race.contested ? "contested" : "no-race"));
       path.setAttribute("vector-effect", "non-scaling-stroke");
       path.setAttribute("data-id", id);
-      path.setAttribute("tabindex", "0");
-      path.setAttribute("role", "button");
-      path.setAttribute("aria-label", race.title + (race.contested ? ", contested race, press Enter for details" : ", no race on this ballot"));
+      if (race.contested) {
+        path.setAttribute("tabindex", "0");
+        path.setAttribute("role", "link");
+        path.setAttribute("aria-label", race.title + ", contested race, press Enter to jump to results");
+      } else {
+        path.setAttribute("aria-label", race.title + ", no race on this ballot");
+      }
       svg.appendChild(path);
     });
 
@@ -166,23 +144,18 @@
     return svg;
   }
 
-  /* ---------- race card ---------- */
+  /* ---------- results list ---------- */
   function fmt(n) { return Number(n || 0).toLocaleString("en-US"); }
 
-  function cardHTML(layerId, id) {
+  function raceHTML(layerId, id) {
     var race = CFG.races[layerId][id];
     var live = !!CFG.live_election;
-    var h = "<button class='card-close' aria-label='Close'>&times;</button>";
-    h += "<h2>" + race.title + "</h2>";
+    var h = "<h2>" + race.title + "</h2>";
     h += "<p class='race-kind'>" + CFG.layers[layerId].label + "</p>";
 
-    if (!race.contested) {
-      h += "<p class='card-note'>No race on this ballot in 2026.</p>";
-      return h;
-    }
     if (!race.candidates.length) {
-      h += "<p class='card-note'>Candidates to be announced.</p>";
-      h += footHTML(race, live);
+      h += "<p class='race-note'>Candidates to be announced.</p>";
+      h += footHTML(race);
       return h;
     }
 
@@ -197,124 +170,110 @@
         "</div><div class='cand-role'>" + (c.role || "") + "</div></div>";
       if (live) h += "<div class='cand-votes'>" + fmt(c.votes) + "</div>";
       h += "</div>";
-
-      // one 100% bar between candidate rows
-      if (live && i < race.candidates.length - 1) {
-        h += "<div class='vote-bar'>";
-        race.candidates.forEach(function (cc, j) {
-          var share = total > 0 ? (Number(cc.votes || 0) / total) * 100 : 100 / race.candidates.length;
-          h += "<span style='width:" + share.toFixed(2) + "%;background:" + BAR_COLORS[j % BAR_COLORS.length] + "'></span>";
-        });
-        h += "</div>";
-        if (total > 0 && race.candidates.length === 2) {
-          var p0 = (Number(race.candidates[0].votes || 0) / total) * 100;
-          h += "<div class='vote-pcts'><span>" + p0.toFixed(1) + "%</span><span>" + (100 - p0).toFixed(1) + "%</span></div>";
-        }
-      }
     });
 
-    h += footHTML(race, live);
+    // one 100% bar beneath the candidates
+    if (live) {
+      h += "<div class='vote-bar'>";
+      race.candidates.forEach(function (cc, j) {
+        var share = total > 0 ? (Number(cc.votes || 0) / total) * 100 : 100 / race.candidates.length;
+        h += "<span style='width:" + share.toFixed(2) + "%;background:" + BAR_COLORS[j % BAR_COLORS.length] + "'></span>";
+      });
+      h += "</div>";
+      if (total > 0 && race.candidates.length === 2) {
+        var p0 = (Number(race.candidates[0].votes || 0) / total) * 100;
+        h += "<div class='vote-pcts'><span>" + p0.toFixed(1) + "%</span><span>" + (100 - p0).toFixed(1) + "%</span></div>";
+      }
+    }
+
+    h += footHTML(race);
     return h;
   }
 
-  function footHTML(race, live) {
-    var h = "<div class='card-foot'><a href='" + (race.read_more || "#") + "' target='_top'>Read more</a>";
-    if (live && CFG.last_updated) h += "<span>Updated " + CFG.last_updated + "</span>";
-    h += "</div>";
-    return h;
+  function footHTML(race) {
+    if (!race.read_more || race.read_more === "#") return "";
+    return "<div class='race-foot'><a href='" + race.read_more + "' target='_top'>Read more</a></div>";
   }
 
-  function openCard(layerId, id, evt) {
-    card.innerHTML = cardHTML(layerId, id);
-    card.classList.add("show");
-    var closeBtn = card.querySelector(".card-close");
-    if (closeBtn) closeBtn.addEventListener("click", closeCard);
-    positionCard(evt);
-    postHeight();
-  }
-
-  function positionCard(evt) {
-    if (window.matchMedia("(max-width: 640px)").matches) return; // CSS centers it
-    var wrapRect = mapWrap.getBoundingClientRect();
-    var x = 16, y = 16;
-    if (evt && typeof evt.clientX === "number") {
-      x = evt.clientX - wrapRect.left + 14;
-      y = evt.clientY - wrapRect.top + 14;
+  function buildList(layerId) {
+    var races = CFG.races[layerId];
+    var ids = Object.keys(races).filter(function (id) { return races[id].contested; });
+    var h = "";
+    if (CFG.live_election && CFG.last_updated) {
+      h += "<p class='results-updated'>Results last updated " + CFG.last_updated + "</p>";
     }
-    var cw = card.offsetWidth || 320;
-    var ch = card.offsetHeight || 200;
-    if (x + cw > wrapRect.width - 8) x = Math.max(8, evt ? evt.clientX - wrapRect.left - cw - 14 : 8);
-    if (y + ch > wrapRect.height - 8) y = Math.max(8, wrapRect.height - ch - 8);
-    card.style.left = x + "px";
-    card.style.top = y + "px";
+    ids.forEach(function (id) {
+      h += "<section class='race' id='race-" + id + "' data-id='" + id + "'>" + raceHTML(layerId, id) + "</section>";
+    });
+    listEl.innerHTML = h;
   }
 
-  function closeCard() {
-    card.classList.remove("show");
-    if (pinnedId) {
-      var el = mapWrap.querySelector(".district.is-active");
-      if (el) el.classList.remove("is-active");
-      pinnedId = null;
+  /* ---------- map <-> list linking ---------- */
+  function clearActive() {
+    var a = mapWrap.querySelector(".district.is-active");
+    if (a) a.classList.remove("is-active");
+    var r = listEl.querySelector(".race.is-active");
+    if (r) r.classList.remove("is-active");
+  }
+
+  function activate(id) {
+    clearActive();
+    var path = mapWrap.querySelector(".district[data-id='" + id + "']");
+    var sec = document.getElementById("race-" + id);
+    if (path) path.classList.add("is-active");
+    if (sec) {
+      sec.classList.add("is-active");
+      sec.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
-    postHeight();
   }
-
-  /* ---------- events ---------- */
-  var hoverCapable = window.matchMedia("(hover: hover)").matches;
 
   function wireEvents() {
-    mapWrap.addEventListener("pointermove", function (e) {
-      if (!hoverCapable || pinnedId) return;
-      var t = e.target.closest ? e.target.closest(".district") : null;
-      if (t) {
-        openCard(activeLayer, t.getAttribute("data-id"), e);
-      } else if (!pinnedId) {
-        closeCard();
-      }
-    });
-
     mapWrap.addEventListener("click", function (e) {
-      var t = e.target.closest ? e.target.closest(".district") : null;
-      if (!t) { closeCard(); return; }
-      var id = t.getAttribute("data-id");
-      var prev = mapWrap.querySelector(".district.is-active");
-      if (prev) prev.classList.remove("is-active");
-      t.classList.add("is-active");
-      pinnedId = id;
-      openCard(activeLayer, id, e);
+      var t = e.target.closest ? e.target.closest(".district.contested") : null;
+      if (!t) { clearActive(); return; }
+      activate(t.getAttribute("data-id"));
     });
 
     mapWrap.addEventListener("keydown", function (e) {
-      var t = e.target.closest ? e.target.closest(".district") : null;
+      var t = e.target.closest ? e.target.closest(".district.contested") : null;
       if (!t) return;
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        t.click();
+        activate(t.getAttribute("data-id"));
       }
     });
 
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") closeCard();
+    // hovering a race in the list lights up its district on the map
+    listEl.addEventListener("pointerover", function (e) {
+      var sec = e.target.closest ? e.target.closest(".race") : null;
+      if (!sec) return;
+      var path = mapWrap.querySelector(".district[data-id='" + sec.getAttribute("data-id") + "']");
+      if (path) path.classList.add("is-hover");
     });
-
-    document.addEventListener("click", function (e) {
-      if (!mapWrap.contains(e.target) && !card.contains(e.target)) closeCard();
+    listEl.addEventListener("pointerout", function (e) {
+      var sec = e.target.closest ? e.target.closest(".race") : null;
+      if (!sec) return;
+      var path = mapWrap.querySelector(".district[data-id='" + sec.getAttribute("data-id") + "']");
+      if (path) path.classList.remove("is-hover");
     });
   }
 
-  /* ---------- layer toggle ---------- */
-  function setLayer(layerId) {
-    activeLayer = layerId;
-    closeCard();
-    var old = mapWrap.querySelector("svg");
-    if (old) old.remove();
-    mapWrap.insertBefore(buildLayer(layerId), card);
-    document.querySelectorAll(".layer-toggle button").forEach(function (b) {
-      b.setAttribute("aria-pressed", String(b.getAttribute("data-layer") === layerId));
+  /* ---------- iframe auto-height ---------- */
+  function postHeight() {
+    window.requestAnimationFrame(function () {
+      var dash = document.querySelector(".dash");
+      var h = Math.ceil(dash ? dash.getBoundingClientRect().height : document.body.offsetHeight);
+      if (window.parent !== window) {
+        window.parent.postMessage({ type: "chicosol-embed-height", height: h }, "*");
+      }
     });
-    var src = document.getElementById("source-line");
-    if (src) src.textContent = "Map: " + CFG.layers[layerId].source;
-    postHeight();
   }
 
-  /* ---------- iframe
+  /* ---------- init ---------- */
+  mapWrap.appendChild(buildMap(LAYER));
+  buildList(LAYER);
+  wireEvents();
+  postHeight();
+  window.addEventListener("resize", postHeight);
+  window.addEventListener("load", postHeight);
+})();
