@@ -60,7 +60,7 @@ window.DASHBOARD_CONFIG = {
 
       d4: { title: "District 4", contested: true, read_more: "#",
         candidates: [
-          { name: "Addison Winslow", role: "Incumbent",  image: "images/candidate.png", votes: 1807 },
+          { name: "<strong>Addison Winslow ✓</strong>", role: "Incumbent",  image: "images/candidate.png", votes: 1807 },
           { name: "Tracy Vincent",   role: "Challenger", image: "images/candidate.png", votes: 975 }
         ]},
 
