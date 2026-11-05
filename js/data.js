@@ -34,7 +34,7 @@ Three steps, repeated as often as the county posts new numbers:
 window.DASHBOARD_CONFIG = {
 
   live_election: true,
-  last_updated: "Nov. 4, 2026, 1:39 p.m.",
+  last_updated: "Nov. 5, 2026, 3:07 p.m.",
 
   title: "Chico's 2026 city council & school board elections.",
   subtitle: "Hover or click on a district to see more info about the race. Read more button will link to relevant/recent coverage. School Board map needs more work, will be fixed soon. Elias S. Myers/ChicoSol. Last Updated: 1:00 PM Wed., Sept. 9., 2026.",
@@ -52,24 +52,24 @@ window.DASHBOARD_CONFIG = {
 
       d2: { title: "District 2", contested: true, read_more: "#",
         candidates: [
-          { name: "Kasey Reynolds", role: "Incumbent",  image: "images/candidate.png", votes: 1511 },
-          { name: "Shelby Hebert",  role: "Challenger", image: "images/candidate.png", votes: 1907 }
+          { name: "Kasey Reynolds", role: "Incumbent",  image: "images/candidate.png", votes: 1568 },
+          { name: "Shelby Hebert",  role: "Challenger", image: "images/candidate.png", votes: 2002 }
         ]},
 
       d3: { title: "District 3", contested: false, read_more: "#", candidates: [] },
 
       d4: { title: "District 4", contested: true, read_more: "#",
         candidates: [
-          { name: "<strong>Addison Winslow ✓</strong>", role: "Incumbent",  image: "images/candidate.png", votes: 1807 },
-          { name: "Tracy Vincent",   role: "Challenger", image: "images/candidate.png", votes: 975 }
+          { name: "<strong>Addison Winslow ✓</strong>", role: "Incumbent",  image: "images/candidate.png", votes: 1953 },
+          { name: "Tracy Vincent",   role: "Challenger", image: "images/candidate.png", votes: 1032 }
         ]},
 
       d5: { title: "District 5", contested: false, read_more: "#", candidates: [] },
 
       d6: { title: "District 6", contested: true, read_more: "#",
         candidates: [
-          { name: "Tom van Overbeek",   role: "Incumbent",  image: "images/candidate.png", votes: 2175 },
-          { name: "Megan Thomas Petty", role: "Challenger", image: "images/candidate.png", votes: 2345 }
+          { name: "Tom van Overbeek",   role: "Incumbent",  image: "images/candidate.png", votes: 2284 },
+          { name: "Megan Thomas Petty", role: "Challenger", image: "images/candidate.png", votes: 2456 }
         ]},
 
       d7: { title: "District 7", contested: false, read_more: "#", candidates: [] }
