@@ -52,24 +52,24 @@ window.DASHBOARD_CONFIG = {
 
       d2: { title: "District 2", contested: true, read_more: "#",
         candidates: [
-          { name: "Kasey Reynolds", role: "Incumbent",  image: "images/candidate.png", votes: 1975 },
-          { name: "Shelby Hebert",  role: "Challenger", image: "images/candidate.png", votes: 2632 }
+          { name: "Kasey Reynolds", role: "Incumbent",  image: "images/candidate.png", votes: 2121 },
+          { name: "Shelby Hebert",  role: "Challenger", image: "images/candidate.png", votes: 2794 }
         ]},
 
       d3: { title: "District 3", contested: false, read_more: "#", candidates: [] },
 
       d4: { title: "District 4", contested: true, read_more: "#",
         candidates: [
-          { name: "<strong>Addison Winslow ✓</strong>", role: "Incumbent",  image: "images/candidate.png", votes: 2632 },
-          { name: "Tracy Vincent",   role: "Challenger", image: "images/candidate.png", votes: 1338 }
+          { name: "<strong>Addison Winslow ✓</strong>", role: "Incumbent",  image: "images/candidate.png", votes: 2797 },
+          { name: "Tracy Vincent",   role: "Challenger", image: "images/candidate.png", votes: 1503 }
         ]},
 
       d5: { title: "District 5", contested: false, read_more: "#", candidates: [] },
 
       d6: { title: "District 6", contested: true, read_more: "#",
         candidates: [
-          { name: "Tom van Overbeek",   role: "Incumbent",  image: "images/candidate.png", votes: 2835 },
-          { name: "Megan Thomas Petty", role: "Challenger", image: "images/candidate.png", votes: 3056 }
+          { name: "Tom van Overbeek",   role: "Incumbent",  image: "images/candidate.png", votes: 3006 },
+          { name: "Megan Thomas Petty", role: "Challenger", image: "images/candidate.png", votes: 3230 }
         ]},
 
       d7: { title: "District 7", contested: false, read_more: "#", candidates: [] }
