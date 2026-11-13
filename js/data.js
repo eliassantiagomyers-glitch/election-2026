@@ -53,7 +53,7 @@ window.DASHBOARD_CONFIG = {
       d2: { title: "District 2", contested: true, read_more: "#",
         candidates: [
           { name: "Kasey Reynolds", role: "Incumbent",  image: "images/candidate.png", votes: 2121 },
-          { name: "Shelby Hebert",  role: "Challenger", image: "images/candidate.png", votes: 2794 }
+          { name: "<strong>Shelby Hebert ✓</strong>",  role: "Challenger", image: "images/candidate.png", votes: 2794 }
         ]},
 
       d3: { title: "District 3", contested: false, read_more: "#", candidates: [] },
